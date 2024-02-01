@@ -1,0 +1,40 @@
+const int MOTION_SENSOR_PIN = 8;
+const int LED_PIN = 2;           
+const int BUTTON_PIN = 6;        
+
+volatile bool motionDetected = false; 
+volatile bool buttonPressed = false;   
+void setup() {
+ 
+  Serial.begin(9600);
+
+  pinMode(MOTION_SENSOR_PIN, INPUT);
+  pinMode(LED_PIN, OUTPUT);
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
+  
+  attachInterrupt(digitalPinToInterrupt(BUTTON_PIN), InterruptFunction, CHANGE);
+}
+
+  void loop() {
+      InterruptFunction();
+  int motionState = digitalRead(MOTION_SENSOR_PIN);
+  
+  if (motionState == HIGH) {
+    Serial.println("Motion detected!!");
+    digitalWrite(LED_PIN, HIGH);
+  } else {
+    Serial.println("No motion detected!!");
+    digitalWrite(LED_PIN, LOW);
+  } }
+
+
+ void InterruptFunction() {
+ if (digitalRead(BUTTON_PIN) == LOW) {
+    digitalWrite(LED_PIN, HIGH); 
+  Serial.println("Interrupted!!");
+ } else {
+    digitalWrite(LED_PIN, LOW);
+   Serial.println("Not Interrupt!!");
+  }
+  delay(1000);
+}
